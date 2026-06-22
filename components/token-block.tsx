@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import type { Token } from "@/lib/tokenizer"
 import { renderTokenText } from "@/lib/tokenizer"
 import { colorForToken } from "@/lib/token-colors"
+import { useI18n } from "@/lib/i18n"
 
 interface TokenBlockProps {
 	token: Token
@@ -20,6 +21,7 @@ export function TokenBlock({
 	animate,
 	onSelect,
 }: TokenBlockProps) {
+	const { t } = useI18n()
 	const color = colorForToken(token)
 	const label = renderTokenText(token.text)
 
@@ -36,7 +38,7 @@ export function TokenBlock({
 				active &&
 					"ring-2 ring-foreground ring-offset-2 ring-offset-background -translate-y-0.5 shadow-md",
 			)}
-			title={`Token #${token.index + 1}`}
+			title={`${t.tokenBlock.tokenNumber}${token.index + 1}`}
 		>
 			<span className="whitespace-pre">{label}</span>
 		</button>

@@ -9,11 +9,8 @@ import {
 	Gauge,
 } from "lucide-react"
 
-import {
-	formatCost,
-	formatReadingTime,
-	type TextStats,
-} from "@/lib/tokenizer"
+import { formatCost, type TextStats } from "@/lib/tokenizer"
+import { useI18n, formatReadingTime } from "@/lib/i18n"
 import { Card } from "@/components/ui/card"
 
 interface StatsPanelProps {
@@ -21,41 +18,43 @@ interface StatsPanelProps {
 }
 
 export function StatsPanel({ stats }: StatsPanelProps) {
+	const { t, locale } = useI18n()
+
 	const items = [
 		{
 			icon: LetterText,
-			label: "Characters",
+			label: t.stats.characters,
 			value: stats.characters.toLocaleString(),
 		},
 		{
 			icon: Type,
-			label: "Words",
+			label: t.stats.words,
 			value: stats.words.toLocaleString(),
 		},
 		{
 			icon: Hash,
-			label: "Tokens",
+			label: t.stats.tokens,
 			value: stats.tokens.toLocaleString(),
 			highlight: true,
 		},
 		{
 			icon: Coins,
-			label: "Est. AI cost",
+			label: t.stats.estCost,
 			value: formatCost(stats.estimatedCost),
-			sub: "simulated",
+			sub: t.stats.simulated,
 		},
 		{
 			icon: Clock,
-			label: "Reading time",
-			value: formatReadingTime(stats.readingTimeSeconds),
+			label: t.stats.readingTime,
+			value: formatReadingTime(stats.readingTimeSeconds, locale),
 		},
 		{
 			icon: Gauge,
-			label: "Token density",
+			label: t.stats.tokenDensity,
 			value:
 				stats.tokens > 0
-					? `1 / ${stats.tokenDensity.toFixed(1)} chars`
-					: "—",
+					? `1 / ${stats.tokenDensity.toFixed(1)} ${t.stats.chars}`
+					: "\u2014",
 		},
 	]
 

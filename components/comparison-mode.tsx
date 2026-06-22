@@ -4,16 +4,26 @@ import * as React from "react"
 import { ArrowRight } from "lucide-react"
 
 import { tokenize, getStats } from "@/lib/tokenizer"
-import { COMPARISON_PRESETS } from "@/lib/examples"
+import { useI18n, comparisonExplanation } from "@/lib/i18n"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { TokenBlock } from "@/components/token-block"
 
-function Side({ label, value, onChange }: {
+function Side({
+	label,
+	value,
+	onChange,
+	placeholder,
+	wordsLabel,
+	tokensLabel,
+}: {
 	label: string
 	value: string
 	onChange: (v: string) => void
+	placeholder: string
+	wordsLabel: string
+	tokensLabel: string
 }) {
 	const tokens = React.useMemo(() => tokenize(value), [value])
 	const stats = React.useMemo(() => getStats(value, tokens), [value, tokens])
@@ -27,7 +37,7 @@ function Side({ label, value, onChange }: {
 				<Input
 					value={value}
 					onChange={(e) => onChange(e.target.value)}
-					placeholder="Type a word or sentence..."
+					placeholder={placeholder}
 				/>
 			</div>
 			<div className="flex flex-wrap gap-1.5">
@@ -37,11 +47,11 @@ function Side({ label, value, onChange }: {
 			</div>
 			<div className="flex gap-6 text-sm">
 				<div>
-					<span className="text-muted-foreground">Words </span>
+					<span className="text-muted-foreground">{wordsLabel} </span>
 					<span className="font-semibold">{stats.words}</span>
 				</div>
 				<div>
-					<span className="text-muted-foreground">Tokens </span>
+					<span className="text-muted-foreground">{tokensLabel} </span>
 					<span className="font-semibold">{stats.tokens}</span>
 				</div>
 			</div>
@@ -50,6 +60,7 @@ function Side({ label, value, onChange }: {
 }
 
 export function ComparisonMode() {
+	const { t, locale } = useI18n()
 	const [a, setA] = React.useState("Hello")
 	const [b, setB] = React.useState("Antidisestablishmentarianism")
 
@@ -62,7 +73,7 @@ export function ComparisonMode() {
 		<Card>
 			<CardContent className="p-6 sm:p-8">
 				<div className="flex flex-wrap gap-2">
-					{COMPARISON_PRESETS.map((preset) => (
+					{t.comparison.presets.map((preset) => (
 						<Button
 							key={preset.label}
 							variant="outline"
@@ -77,20 +88,37 @@ export function ComparisonMode() {
 					))}
 				</div>
 				<div className="mt-6 flex flex-col gap-6 md:flex-row md:items-start">
-					<Side label="Sentence A" value={a} onChange={setA} />
+					<Side
+						label={t.comparison.sentenceA}
+						value={a}
+						onChange={setA}
+						placeholder={t.comparison.inputPlaceholder}
+						wordsLabel={t.comparison.words}
+						tokensLabel={t.comparison.tokens}
+					/>
 					<div className="hidden self-center text-muted-foreground md:block">
 						<ArrowRight className="h-5 w-5" />
 					</div>
-					<Side label="Sentence B" value={b} onChange={setB} />
+					<Side
+						label={t.comparison.sentenceB}
+						value={b}
+						onChange={setB}
+						placeholder={t.comparison.inputPlaceholder}
+						wordsLabel={t.comparison.words}
+						tokensLabel={t.comparison.tokens}
+					/>
 				</div>
 				<div className="mt-6 rounded-xl border bg-muted/30 p-4 text-sm leading-relaxed text-muted-foreground">
-					<span className="font-medium text-foreground">Why the difference? </span>
-					“{a || "A"}” uses {wordsA} word / {tokensA.length} token
-					{tokensA.length === 1 ? "" : "s"}, while “{b || "B"}” uses {wordsB}{" "}
-					word / {tokensB.length} token{tokensB.length === 1 ? "" : "s"}. Rare or
-					long words aren’t in the model’s vocabulary as a single piece, so they
-					get split into several sub-word tokens — even when they’re still just
-					“one word” to a human.
+					<span className="font-medium text-foreground">{t.comparison.whyDifferent}</span>
+					{comparisonExplanation(
+						locale,
+						a,
+						b,
+						wordsA,
+						tokensA.length,
+						wordsB,
+						tokensB.length,
+					)}
 				</div>
 			</CardContent>
 		</Card>

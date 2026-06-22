@@ -4,6 +4,7 @@ import * as React from "react"
 import { Check, Copy, Image as ImageIcon, Link2 } from "lucide-react"
 
 import type { Token } from "@/lib/tokenizer"
+import { useI18n } from "@/lib/i18n"
 import { Button } from "@/components/ui/button"
 import { exportTokensToPng, downloadDataUrl } from "@/lib/export-image"
 import { encodeShareText } from "@/lib/share"
@@ -16,17 +17,18 @@ interface ShareFeaturesProps {
 type Status = "idle" | "copied" | "linked"
 
 export function ShareFeatures({ text, tokens }: ShareFeaturesProps) {
+	const { t } = useI18n()
 	const [status, setStatus] = React.useState<Status>("idle")
 	const disabled = tokens.length === 0
 
 	React.useEffect(() => {
 		if (status === "idle") return
-		const t = setTimeout(() => setStatus("idle"), 1800)
-		return () => clearTimeout(t)
+		const tm = setTimeout(() => setStatus("idle"), 1800)
+		return () => clearTimeout(tm)
 	}, [status])
 
 	const copyResult = async () => {
-		const summary = tokens.map((t) => `[${t.text}]`).join(" ")
+		const summary = tokens.map((tk) => `[${tk.text}]`).join(" ")
 		const payload = `Token Explorer\n\n"${text}"\n\n${tokens.length} tokens:\n${summary}`
 		try {
 			await navigator.clipboard.writeText(payload)
@@ -63,7 +65,7 @@ export function ShareFeatures({ text, tokens }: ShareFeaturesProps) {
 				) : (
 					<Copy className="h-4 w-4" />
 				)}
-				{status === "copied" ? "Copied" : "Copy result"}
+				{status === "copied" ? t.share.copied : t.share.copyResult}
 			</Button>
 			<Button variant="outline" size="sm" onClick={shareLink} disabled={disabled}>
 				{status === "linked" ? (
@@ -71,11 +73,11 @@ export function ShareFeatures({ text, tokens }: ShareFeaturesProps) {
 				) : (
 					<Link2 className="h-4 w-4" />
 				)}
-				{status === "linked" ? "Link copied" : "Share link"}
+				{status === "linked" ? t.share.linkCopied : t.share.shareLink}
 			</Button>
 			<Button variant="outline" size="sm" onClick={exportPng} disabled={disabled}>
 				<ImageIcon className="h-4 w-4" />
-				Export as PNG
+				{t.share.exportPng}
 			</Button>
 		</div>
 	)

@@ -8,8 +8,8 @@ import {
 	getStats,
 	type Token,
 } from "@/lib/tokenizer"
-import { getRandomExample } from "@/lib/examples"
 import { decodeShareText } from "@/lib/share"
+import { useI18n } from "@/lib/i18n"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
@@ -24,11 +24,10 @@ import { ComparisonMode } from "@/components/comparison-mode"
 import { FunMode } from "@/components/fun-mode"
 import { ShareFeatures } from "@/components/share-features"
 
-const DEFAULT_TEXT = "Saya suka nasi goreng."
-
 export function Playground() {
-	const [draft, setDraft] = React.useState(DEFAULT_TEXT)
-	const [analyzed, setAnalyzed] = React.useState(DEFAULT_TEXT)
+	const { t } = useI18n()
+	const [draft, setDraft] = React.useState(t.playground.defaultText)
+	const [analyzed, setAnalyzed] = React.useState(t.playground.defaultText)
 	const [loading, setLoading] = React.useState(false)
 	const [animate, setAnimate] = React.useState(true)
 	const [selected, setSelected] = React.useState<Token | null>(null)
@@ -76,7 +75,15 @@ export function Playground() {
 	const handleAnalyze = () => runAnalysis(draft)
 
 	const handleRandom = () => {
-		const example = getRandomExample(draft)
+		const list = t.playground.randomExamples
+		let example = draft
+		if (list.length > 0) {
+			let guard = 0
+			while ((example === draft || guard === 0) && guard < 12) {
+				example = list[Math.floor(Math.random() * list.length)]
+				guard++
+			}
+		}
 		setDraft(example)
 		runAnalysis(example)
 	}
@@ -109,26 +116,26 @@ export function Playground() {
 								handleAnalyze()
 							}
 						}}
-						placeholder="Type or paste text here..."
+						placeholder={t.playground.placeholder}
 						className="min-h-[150px] text-lg"
 					/>
 					<div className="mt-4 flex flex-wrap items-center justify-between gap-3">
 						<div className="flex w-full flex-wrap gap-2 sm:w-auto">
 							<Button onClick={handleAnalyze} className="flex-1 sm:flex-none">
 								<Wand2 className="h-4 w-4" />
-								Analyze
+								{t.playground.analyze}
 							</Button>
 							<Button variant="outline" onClick={handleRandom} className="flex-1 sm:flex-none">
 								<Shuffle className="h-4 w-4" />
-								Random Example
+								{t.playground.randomExample}
 							</Button>
 							<Button variant="ghost" onClick={handleClear} className="flex-1 sm:flex-none">
 								<Eraser className="h-4 w-4" />
-								Clear
+								{t.playground.clear}
 							</Button>
 						</div>
 						<span className="hidden text-xs text-muted-foreground sm:block">
-							⌘ / Ctrl + Enter to analyze
+							{t.playground.shortcut}
 						</span>
 					</div>
 				</CardContent>
@@ -143,7 +150,7 @@ export function Playground() {
 					<CardContent className="p-6 sm:p-8">
 						<div className="mb-4 flex items-center gap-2">
 							<Sparkles className="h-4 w-4 text-muted-foreground" />
-							<h2 className="text-sm font-medium">Tokenization view</h2>
+							<h2 className="text-sm font-medium">{t.playground.tokenizationView}</h2>
 						</div>
 						<TokenizationView
 							tokens={tokens}
@@ -160,7 +167,7 @@ export function Playground() {
 			{/* Share */}
 			<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 				<h2 className="text-sm font-medium text-muted-foreground">
-					Share your result
+					{t.playground.shareYourResult}
 				</h2>
 				<ShareFeatures text={analyzed} tokens={tokens} />
 			</div>
@@ -169,17 +176,17 @@ export function Playground() {
 			<Tabs defaultValue="perspective" className="w-full">
 				<div className="-mx-4 flex justify-start overflow-x-auto px-4 pb-2 sm:mx-0 sm:justify-center sm:overflow-visible sm:px-0 sm:pb-0">
 					<TabsList className="flex-nowrap">
-						<TabsTrigger value="perspective">AI perspective</TabsTrigger>
-						<TabsTrigger value="animation">Animation</TabsTrigger>
-						<TabsTrigger value="insights">Insights</TabsTrigger>
-						<TabsTrigger value="comparison">Comparison</TabsTrigger>
-						<TabsTrigger value="fun">Fun mode</TabsTrigger>
+						<TabsTrigger value="perspective">{t.playground.tabs.perspective}</TabsTrigger>
+						<TabsTrigger value="animation">{t.playground.tabs.animation}</TabsTrigger>
+						<TabsTrigger value="insights">{t.playground.tabs.insights}</TabsTrigger>
+						<TabsTrigger value="comparison">{t.playground.tabs.comparison}</TabsTrigger>
+						<TabsTrigger value="fun">{t.playground.tabs.fun}</TabsTrigger>
 					</TabsList>
 				</div>
 				<TabsContent value="perspective" id="perspective">
 					<div className="mb-4 text-center">
 						<h2 className="text-2xl font-semibold tracking-tight">
-							How AI sees this text
+							{t.playground.howAiSees}
 						</h2>
 					</div>
 					<AiPerspective text={analyzed} tokens={tokens} />

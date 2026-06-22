@@ -1,6 +1,7 @@
 "use client"
 
 import type { Token } from "@/lib/tokenizer"
+import { useI18n } from "@/lib/i18n"
 import { TokenBlock } from "@/components/token-block"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -19,6 +20,8 @@ export function TokenizationView({
 	activeIndex,
 	onSelect,
 }: TokenizationViewProps) {
+	const { t } = useI18n()
+
 	if (loading) {
 		return (
 			<div className="flex flex-wrap gap-2">
@@ -36,7 +39,7 @@ export function TokenizationView({
 	if (tokens.length === 0) {
 		return (
 			<div className="flex min-h-[120px] items-center justify-center rounded-xl border border-dashed text-sm text-muted-foreground">
-				Your tokens will appear here.
+				{t.tokenizationView.empty}
 			</div>
 		)
 	}

@@ -5,6 +5,7 @@ import { X } from "lucide-react"
 import type { Token } from "@/lib/tokenizer"
 import { renderTokenText } from "@/lib/tokenizer"
 import { colorForToken } from "@/lib/token-colors"
+import { useI18n } from "@/lib/i18n"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 
@@ -23,12 +24,14 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
 }
 
 export function TokenDetail({ token, onClose }: TokenDetailProps) {
+	const { t } = useI18n()
+
 	if (!token) {
 		return (
 			<Card className="border-dashed bg-muted/30">
 				<CardContent className="flex min-h-[180px] flex-col items-center justify-center p-6 text-center">
 					<p className="text-sm text-muted-foreground">
-						Click any token to inspect its details.
+						{t.tokenDetail.empty}
 					</p>
 				</CardContent>
 			</Card>
@@ -37,6 +40,7 @@ export function TokenDetail({ token, onClose }: TokenDetailProps) {
 
 	const color = colorForToken(token)
 	const display = renderTokenText(token.text)
+	const kindLabel = t.tokenDetail.kinds[token.kind]
 
 	return (
 		<Card className="animate-fade-in">
@@ -44,7 +48,7 @@ export function TokenDetail({ token, onClose }: TokenDetailProps) {
 				<div className="flex items-start justify-between">
 					<div className="space-y-1">
 						<p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-							Token #{token.index + 1}
+							{t.tokenDetail.tokenNumber}{token.index + 1}
 						</p>
 						<div
 							className={`inline-flex items-center rounded-lg border px-3 py-1.5 font-mono text-base ${color.className}`}
@@ -54,13 +58,13 @@ export function TokenDetail({ token, onClose }: TokenDetailProps) {
 					</div>
 					<div className="flex items-center gap-2">
 						<Badge variant="muted" className="capitalize">
-							{token.kind}
+							{kindLabel}
 						</Badge>
 						{onClose ? (
 							<button
 								type="button"
 								onClick={onClose}
-								aria-label="Close token details"
+								aria-label={t.tokenDetail.close}
 								className="flex h-7 w-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
 							>
 								<X className="h-4 w-4" />
@@ -69,17 +73,16 @@ export function TokenDetail({ token, onClose }: TokenDetailProps) {
 					</div>
 				</div>
 				<div className="mt-4 divide-y divide-border">
-					<Row label="Raw token" value={`"${token.text}"`} />
-					<Row label="Characters" value={token.text.length} />
+					<Row label={t.tokenDetail.rawToken} value={`"${token.text}"`} />
+					<Row label={t.tokenDetail.characters} value={token.text.length} />
 					<Row
-						label="Estimated token ID"
+						label={t.tokenDetail.estTokenId}
 						value={token.id.toLocaleString()}
 					/>
-					<Row label="Bytes (UTF-8)" value={token.bytes} />
+					<Row label={t.tokenDetail.bytes} value={token.bytes} />
 				</div>
 				<p className="mt-4 text-xs text-muted-foreground">
-					Token ID is simulated for learning — a real model maps this token to
-					a fixed integer in its vocabulary.
+					{t.tokenDetail.note}
 				</p>
 			</CardContent>
 		</Card>

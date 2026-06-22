@@ -4,18 +4,18 @@ import * as React from "react"
 import { Play, RotateCcw } from "lucide-react"
 
 import { tokenize } from "@/lib/tokenizer"
+import { useI18n } from "@/lib/i18n"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { TokenBlock } from "@/components/token-block"
-
-const DEFAULT_TEXT = "ChatGPT is amazing"
 
 interface TokenAnimationProps {
 	text?: string
 }
 
 export function TokenAnimation({ text }: TokenAnimationProps) {
-	const source = (text && text.trim()) || DEFAULT_TEXT
+	const { t } = useI18n()
+	const source = (text && text.trim()) || t.tokenAnimation.defaultText
 	const tokens = React.useMemo(() => tokenize(source), [source])
 
 	const [phase, setPhase] = React.useState<"idle" | "text" | "tokens">("idle")
@@ -28,14 +28,14 @@ export function TokenAnimation({ text }: TokenAnimationProps) {
 
 	React.useEffect(() => {
 		if (phase !== "text") return
-		const t = setTimeout(() => setPhase("tokens"), 900)
-		return () => clearTimeout(t)
+		const tm = setTimeout(() => setPhase("tokens"), 900)
+		return () => clearTimeout(tm)
 	}, [phase, runId])
 
 	// Auto-play once on mount.
 	React.useEffect(() => {
-		const t = setTimeout(() => play(), 350)
-		return () => clearTimeout(t)
+		const tm = setTimeout(() => play(), 350)
+		return () => clearTimeout(tm)
 	}, [play])
 
 	return (
@@ -77,7 +77,7 @@ export function TokenAnimation({ text }: TokenAnimationProps) {
 						) : (
 							<RotateCcw className="h-4 w-4" />
 						)}
-						Replay animation
+						{t.tokenAnimation.replay}
 					</Button>
 				</div>
 			</CardContent>
