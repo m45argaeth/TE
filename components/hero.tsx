@@ -10,36 +10,36 @@ import { Badge } from "@/components/ui/badge"
 import { TokenBlock } from "@/components/token-block"
 import { tokenize } from "@/lib/tokenizer"
 import { encodeShareText } from "@/lib/share"
-
-const HERO_SENTENCES = [
-	"I love fried rice.",
-	"Humans read words.",
-	"AI reads tokens.",
-	"ChatGPT is amazing.",
-]
+import { useI18n } from "@/lib/i18n"
 
 export function Hero() {
 	const router = useRouter()
+	const { t } = useI18n()
+	const sentences = t.hero.sentences
 	const [sentenceIndex, setSentenceIndex] = React.useState(0)
 	const [phase, setPhase] = React.useState<"text" | "tokens">("text")
+
+	React.useEffect(() => {
+		setSentenceIndex((i) => (i < sentences.length ? i : 0))
+	}, [sentences.length])
 
 	React.useEffect(() => {
 		const toTokens = setTimeout(() => setPhase("tokens"), 1400)
 		const next = setTimeout(() => {
 			setPhase("text")
-			setSentenceIndex((i) => (i + 1) % HERO_SENTENCES.length)
+			setSentenceIndex((i) => (i + 1) % sentences.length)
 		}, 4200)
 		return () => {
 			clearTimeout(toTokens)
 			clearTimeout(next)
 		}
-	}, [sentenceIndex])
+	}, [sentenceIndex, sentences.length])
 
-	const sentence = HERO_SENTENCES[sentenceIndex]
+	const sentence = sentences[sentenceIndex] ?? sentences[0]
 	const tokens = React.useMemo(() => tokenize(sentence), [sentence])
 
 	const goRandom = () => {
-		const pick = HERO_SENTENCES[Math.floor(Math.random() * HERO_SENTENCES.length)]
+		const pick = sentences[Math.floor(Math.random() * sentences.length)]
 		router.push(`/playground#${encodeShareText(pick)}`)
 	}
 
@@ -59,7 +59,7 @@ export function Hero() {
 						className="mb-6 animate-fade-in gap-1.5 px-3 py-1 text-xs"
 					>
 						<Sparkles className="h-3.5 w-3.5" />
-						Humans read words. AI reads tokens.
+						{t.hero.badge}
 					</Badge>
 					<h1 className="animate-fade-up text-balance text-4xl font-semibold tracking-tight sm:text-6xl md:text-7xl">
 						Token Explorer
@@ -68,8 +68,7 @@ export function Hero() {
 						className="mt-6 max-w-xl animate-fade-up text-balance text-lg text-muted-foreground sm:text-xl"
 						style={subtitleStyle}
 					>
-						See how AI breaks your sentences into tokens before generating a
-						response.
+						{t.hero.subtitle}
 					</p>
 					<div
 						className="mt-9 flex w-full animate-fade-up flex-col items-center gap-3 sm:w-auto sm:flex-row"
@@ -77,13 +76,13 @@ export function Hero() {
 					>
 						<Button asChild size="lg" className="w-full sm:w-auto">
 							<Link href="/playground">
-								Explore Tokens
+								{t.hero.exploreTokens}
 								<ArrowRight className="h-4 w-4" />
 							</Link>
 						</Button>
 						<Button size="lg" variant="outline" onClick={goRandom} className="w-full sm:w-auto">
 							<Shuffle className="h-4 w-4" />
-							Random Example
+							{t.hero.randomExample}
 						</Button>
 					</div>
 				</div>
@@ -94,8 +93,8 @@ export function Hero() {
 				>
 					<div className="rounded-3xl border bg-card/70 p-6 shadow-sm backdrop-blur-sm sm:p-12">
 						<div className="flex items-center justify-between text-xs font-medium uppercase tracking-wide text-muted-foreground">
-							<span>Humans see</span>
-							<span>AI sees</span>
+							<span>{t.hero.humansSee}</span>
+							<span>{t.hero.aiSees}</span>
 						</div>
 						<div className="mt-5 min-h-[120px]">
 							{phase === "text" ? (
@@ -117,7 +116,7 @@ export function Hero() {
 							)}
 						</div>
 						<p className="mt-5 text-center text-sm text-muted-foreground">
-							{tokens.length} tokens · {sentence.length} characters
+							{tokens.length} {t.hero.tokens} · {sentence.length} {t.hero.characters}
 						</p>
 					</div>
 				</div>

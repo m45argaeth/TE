@@ -1,47 +1,30 @@
+"use client"
+
 import Link from "next/link"
 import { ArrowRight, Binary, Eye, Gauge, Sparkles } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-
-const FEATURES = [
-	{
-		icon: Binary,
-		title: "Live tokenization",
-		body: "Watch any sentence break into colorful token blocks. Hover and click to inspect each token's id, characters, and bytes.",
-	},
-	{
-		icon: Gauge,
-		title: "Instant stats",
-		body: "Characters, words, tokens, estimated cost, reading time, and token density — updated as you type.",
-	},
-	{
-		icon: Eye,
-		title: "The AI's perspective",
-		body: "See the journey from sentence to tokens to embeddings to prediction, the way a model actually reads.",
-	},
-	{
-		icon: Sparkles,
-		title: "Surprising comparisons",
-		body: "Compare short vs long words and discover why 'strawberry' can cost more tokens than you'd expect.",
-	},
-]
+import { useI18n } from "@/lib/i18n"
 
 export function LandingSections() {
+	const { t } = useI18n()
+	const icons = [Binary, Gauge, Eye, Sparkles]
+	const features = t.landing.features.map((f, i) => ({ ...f, icon: icons[i] }))
+
 	return (
 		<>
 			<section className="mx-auto max-w-6xl px-6 py-20">
 				<div className="mx-auto max-w-2xl text-center">
 					<h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-						A playground for how machines read
+						{t.landing.featuresHeading}
 					</h2>
 					<p className="mt-4 text-balance text-muted-foreground">
-						Tokens are the atoms of language models. Token Explorer makes them
-						visible, tangible, and a little bit fun.
+						{t.landing.featuresSubtitle}
 					</p>
 				</div>
 				<div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-					{FEATURES.map((feature) => (
+					{features.map((feature) => (
 						<Card
 							key={feature.title}
 							className="group border-border/70 transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
@@ -67,16 +50,15 @@ export function LandingSections() {
 					</div>
 					<div className="relative mx-auto max-w-2xl text-center">
 						<h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-							Ready to see your words as tokens?
+							{t.landing.ctaHeading}
 						</h2>
 						<p className="mt-4 text-background/70">
-							Paste a sentence, an essay, or an emoji. The playground does the
-							rest — instantly and entirely in your browser.
+							{t.landing.ctaBody}
 						</p>
 						<div className="mt-8 flex justify-center">
 							<Button asChild size="lg" variant="secondary">
 								<Link href="/playground">
-									Open the playground
+									{t.landing.ctaButton}
 									<ArrowRight className="h-4 w-4" />
 								</Link>
 							</Button>

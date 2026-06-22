@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
+import { I18nProvider } from "@/lib/i18n"
 
 const inter = Inter({
 	subsets: ["latin"],
@@ -22,32 +23,32 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
 	title: {
-		default: "Token Explorer — Humans read words. AI reads tokens.",
+		default: "Token Explorer — Manusia membaca kata. AI membaca token.",
 		template: "%s · Token Explorer",
 	},
 	description:
-		"An educational playground that helps you understand how Large Language Models process text using tokens. See your sentences split into tokens, in real time.",
+		"Playground edukasi yang membantumu memahami cara Large Language Model memproses teks menggunakan token. Lihat kalimatmu terpecah menjadi token secara real-time.",
 	keywords: [
-		"tokens",
+		"token",
 		"tokenizer",
 		"LLM",
 		"AI",
 		"GPT",
 		"machine learning",
-		"education",
+		"edukasi",
 	],
 	authors: [{ name: "Token Explorer" }],
 	openGraph: {
 		title: "Token Explorer",
 		description:
-			"See how AI breaks your sentences into tokens before generating a response.",
+			"Lihat bagaimana AI memecah kalimatmu menjadi token sebelum menghasilkan respons.",
 		type: "website",
 	},
 	twitter: {
 		card: "summary_large_image",
 		title: "Token Explorer",
 		description:
-			"See how AI breaks your sentences into tokens before generating a response.",
+			"Lihat bagaimana AI memecah kalimatmu menjadi token sebelum menghasilkan respons.",
 	},
 }
 
@@ -64,7 +65,7 @@ export default function RootLayout({
 	children: React.ReactNode
 }) {
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<html lang="id" suppressHydrationWarning>
 			<body
 				className={cn(
 					"min-h-screen bg-background font-sans",
@@ -78,13 +79,15 @@ export default function RootLayout({
 					enableSystem={false}
 					disableTransitionOnChange
 				>
-					<TooltipProvider delayDuration={120}>
-						<div className="relative flex min-h-screen flex-col">
-							<SiteHeader />
-							<main className="flex-1">{children}</main>
-							<SiteFooter />
-						</div>
-					</TooltipProvider>
+					<I18nProvider>
+						<TooltipProvider delayDuration={120}>
+							<div className="relative flex min-h-screen flex-col">
+								<SiteHeader />
+								<main className="flex-1">{children}</main>
+								<SiteFooter />
+							</div>
+						</TooltipProvider>
+					</I18nProvider>
 				</ThemeProvider>
 			</body>
 		</html>

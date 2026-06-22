@@ -8,10 +8,13 @@ import { Boxes } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { LanguageToggle } from "@/components/language-toggle"
+import { useI18n } from "@/lib/i18n"
 
 export function SiteHeader() {
 	const pathname = usePathname()
 	const [scrolled, setScrolled] = React.useState(false)
+	const { t } = useI18n()
 
 	React.useEffect(() => {
 		const onScroll = () => setScrolled(window.scrollY > 8)
@@ -45,7 +48,7 @@ export function SiteHeader() {
 							pathname === "/" && "text-foreground",
 						)}
 					>
-						<Link href="/">Home</Link>
+						<Link href="/">{t.header.home}</Link>
 					</Button>
 					<Button
 						asChild
@@ -56,14 +59,15 @@ export function SiteHeader() {
 							pathname?.startsWith("/playground") && "text-foreground",
 						)}
 					>
-						<Link href="/playground">Playground</Link>
+						<Link href="/playground">{t.header.playground}</Link>
 					</Button>
+					<LanguageToggle />
 					<ThemeToggle />
 					<Button asChild size="sm" className="hidden sm:inline-flex">
-						<Link href="/playground">Explore Tokens</Link>
+						<Link href="/playground">{t.header.exploreTokens}</Link>
 					</Button>
 					<Button asChild size="sm" className="sm:hidden">
-						<Link href="/playground">Playground</Link>
+						<Link href="/playground">{t.header.playground}</Link>
 					</Button>
 				</nav>
 			</div>

@@ -1,7 +1,12 @@
+"use client"
+
 import Link from "next/link"
 import { Boxes } from "lucide-react"
 
+import { useI18n } from "@/lib/i18n"
+
 export function SiteFooter() {
+	const { t } = useI18n()
 	return (
 		<footer className="border-t border-border/60 bg-muted/30">
 			<div className="mx-auto max-w-6xl px-6 py-12 sm:py-14">
@@ -14,52 +19,47 @@ export function SiteFooter() {
 							<span>Token Explorer</span>
 						</Link>
 						<p className="text-sm leading-relaxed text-muted-foreground">
-							Large Language Models do not read text the way humans do.
-							Before generating responses, they convert text into tokens and
-							numerical representations.
+							{t.footer.tagline}
 						</p>
 					</div>
 					<div className="flex flex-wrap gap-10 sm:gap-16">
 						<div className="space-y-3">
-							<p className="text-sm font-medium">Explore</p>
+							<p className="text-sm font-medium">{t.footer.exploreHeading}</p>
 							<ul className="space-y-2 text-sm text-muted-foreground">
 								<li>
 									<Link href="/playground" className="transition-colors hover:text-foreground">
-										Playground
+										{t.footer.playground}
 									</Link>
 								</li>
 								<li>
 									<Link href="/playground#comparison" className="transition-colors hover:text-foreground">
-										Comparison
+										{t.footer.comparison}
 									</Link>
 								</li>
 								<li>
 									<Link href="/playground#fun" className="transition-colors hover:text-foreground">
-										Token Surprises
+										{t.footer.tokenSurprises}
 									</Link>
 								</li>
 							</ul>
 						</div>
 						<div className="space-y-3">
-							<p className="text-sm font-medium">About</p>
+							<p className="text-sm font-medium">{t.footer.aboutHeading}</p>
 							<ul className="space-y-2 text-sm text-muted-foreground">
-								<li>Educational demo</li>
-								<li>Simulated tokenizer</li>
-								<li>100% client-side</li>
+								<li>{t.footer.aboutEducational}</li>
+								<li>{t.footer.aboutSimulated}</li>
+								<li>{t.footer.aboutClientSide}</li>
 							</ul>
 						</div>
 					</div>
 				</div>
 				<div className="mt-10 border-t border-border/60 pt-6 sm:mt-12">
 					<div className="flex flex-col gap-2 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-						<p>Humans read words. AI reads tokens.</p>
-						<p>
-							Token counts are simulated for learning — real tokenizers vary by
-							model.
-						</p>
+						<p>{t.footer.tagline2}</p>
+						<p>{t.footer.disclaimer}</p>
 					</div>
 					<p className="mt-4 text-center text-xs text-muted-foreground">
-						Made with ❤️ by{" "}
+						{t.footer.madeWith}{" "}
 						<a
 							href="https://x.com/sinigajelasin"
 							target="_blank"
