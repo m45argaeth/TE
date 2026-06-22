@@ -103,7 +103,7 @@ export function Playground() {
 					<Textarea
 						value={draft}
 						onChange={(e) => setDraft(e.target.value)}
-					onKeyDown={(e) => {
+						onKeyDown={(e) => {
 							if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
 								e.preventDefault()
 								handleAnalyze()
@@ -113,16 +113,16 @@ export function Playground() {
 						className="min-h-[150px] text-lg"
 					/>
 					<div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-						<div className="flex flex-wrap gap-2">
-							<Button onClick={handleAnalyze}>
+						<div className="flex w-full flex-wrap gap-2 sm:w-auto">
+							<Button onClick={handleAnalyze} className="flex-1 sm:flex-none">
 								<Wand2 className="h-4 w-4" />
 								Analyze
 							</Button>
-							<Button variant="outline" onClick={handleRandom}>
+							<Button variant="outline" onClick={handleRandom} className="flex-1 sm:flex-none">
 								<Shuffle className="h-4 w-4" />
 								Random Example
 							</Button>
-							<Button variant="ghost" onClick={handleClear}>
+							<Button variant="ghost" onClick={handleClear} className="flex-1 sm:flex-none">
 								<Eraser className="h-4 w-4" />
 								Clear
 							</Button>
@@ -167,8 +167,8 @@ export function Playground() {
 
 			{/* Modes */}
 			<Tabs defaultValue="perspective" className="w-full">
-				<div className="flex justify-center">
-					<TabsList className="flex-wrap">
+				<div className="-mx-4 flex justify-start overflow-x-auto px-4 pb-2 sm:mx-0 sm:justify-center sm:overflow-visible sm:px-0 sm:pb-0">
+					<TabsList className="flex-nowrap">
 						<TabsTrigger value="perspective">AI perspective</TabsTrigger>
 						<TabsTrigger value="animation">Animation</TabsTrigger>
 						<TabsTrigger value="insights">Insights</TabsTrigger>
